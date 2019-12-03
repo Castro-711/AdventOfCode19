@@ -1,0 +1,5 @@
+package three
+
+object ManhattanDistance {
+
+}

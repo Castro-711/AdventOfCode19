@@ -10,14 +10,12 @@ class IntCodeProgramTest extends FlatSpecLike {
     IntCodeProgram.readInFile("IntCodeData").foreach(println)
   }
 
-  it should "return the value at position 0 when getNextOpCode is invoked" in {
-    var arr = Array(1,0,0,0,99)
-
-    IntCodeProgram.getNextOpcode(arr, 0)
+  it should "return the correct value at index 0" in {
+    println(IntCodeProgram.getNextOpcode(IntCodeProgram.readInFile("IntCodeData"), 0, 12, 2))
   }
 
-  it should "return the correct value at index 0" in {
-    IntCodeProgram.getNextOpcode(IntCodeProgram.readInFile("IntCodeData"), 0)
+  it should "return the correct noun & verb needed to produce 19690720" in {
+    println(IntCodeProgram.calculateNounAndVerb(99, 99))
   }
 
 }
