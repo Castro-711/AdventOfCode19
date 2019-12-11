@@ -1,30 +1,15 @@
 package com.advent.code.three
 
-import com.advent.code.three.ManhattanDistance.{Coordinate, PathGenerator}
 import org.scalatest.{FlatSpecLike, Matchers}
 
 class ManhattanDistanceTest extends FlatSpecLike with Matchers {
 
   lazy val moveSets = ManhattanDistance.getListOfMoves()
-  lazy val criticalPath1 = PathGenerator(moveSets._1)
 
   behavior of "getData"
 
   it should "return the contents of the file when getData is invoked" in {
     println(ManhattanDistance.getData("ManhattanDistanceData"))
-  }
-
-  behavior of "generateNextCoords"
-
-  it should "produce the full vector of coords from starting point up until the final coord" in {
-    val move = "R24"
-//    val startCoord = Coordinate(7, 13)
-//    val finalCoord = Coordinate(31, 13)
-
-//    val vec = ManhattanDistance.generateNextCoord(move, startCoord)
-
-//    vec.last shouldBe finalCoord
-//    vec.size shouldBe 25
   }
 
   behavior of "getListOfMoves"
@@ -35,24 +20,20 @@ class ManhattanDistanceTest extends FlatSpecLike with Matchers {
     println(moveSets._2)
   }
 
-  behavior of "PathGenerator"
+  behavior of "getCoordsPath"
 
-  it should "return a vector with all of the points of interest" in {
-    println(criticalPath1)
+  it should "get the distinct coords" in {
+    println(ManhattanDistance.getCoordsPath(moveSets._1).reverse)
+    println(ManhattanDistance.getCoordsPath(moveSets._2))
   }
 
-  behavior of "generateIntermediateCoords"
+  it should "fill the paths to the critical points" in {
+    val moves1 = "R75,D30,R83,U83,L12,D49,R71,U7,L72".split(",").toList
+    val moves2 = "U62,R66,U55,R34,D71,R55,D58,R83".split(",").toList
 
-  it should "return a vector of all the points from current" in {
-//    val x = ManhattanDistance.generateIntermediateCoords("X", 5, Coordinate(13, 2))
-//    val v = (0 to 5).map(c => Coordinate(10, c)).toVector
-//    println(v)
-//    println(x)
+    println(ManhattanDistance.getCoordsPath(moves1))
+    println(ManhattanDistance.getCoordsPath(moves2))
+
   }
-
-  it should "return the full path for one of the moves" in {
-//    criticalPath1.vec.map(c => ManhattanDistance.generateIntermediateCoords(c.))
-  }
-
 
 }
