@@ -1,9 +1,12 @@
 package com.advent.code.three
 
-import com.advent.code.three.ManhattanDistance.{Coordinate, Path}
+import com.advent.code.three.ManhattanDistance.{Coordinate, PathGenerator}
 import org.scalatest.{FlatSpecLike, Matchers}
 
 class ManhattanDistanceTest extends FlatSpecLike with Matchers {
+
+  lazy val moveSets = ManhattanDistance.getListOfMoves()
+  lazy val criticalPath1 = PathGenerator(moveSets._1)
 
   behavior of "getData"
 
@@ -11,66 +14,44 @@ class ManhattanDistanceTest extends FlatSpecLike with Matchers {
     println(ManhattanDistance.getData("ManhattanDistanceData"))
   }
 
-  behavior of "calcNextCoord"
+  behavior of "generateNextCoords"
 
-  it should "return a coordinate with the correct points" in {
-    val origin = new ManhattanDistance.Coordinate(0, 0)
+  it should "produce the full vector of coords from starting point up until the final coord" in {
+    val move = "R24"
+//    val startCoord = Coordinate(7, 13)
+//    val finalCoord = Coordinate(31, 13)
 
-    val coordR = ManhattanDistance.Coordinate.calcNextCoord("R9", origin)
-    println(s"coordR(${coordR.x}, ${coordR.y})")
-    coordR.x shouldBe 9
-    coordR.y shouldBe 0
+//    val vec = ManhattanDistance.generateNextCoord(move, startCoord)
 
-    val coordL = ManhattanDistance.Coordinate.calcNextCoord("L9", origin)
-    println(s"coordL(${coordL.x}, ${coordL.y})")
-    coordL.x shouldBe -9
-    coordL.y shouldBe 0
-
-    val coordU = ManhattanDistance.Coordinate.calcNextCoord("U9", origin)
-    println(s"coordU(${coordU.x}, ${coordU.y})")
-    coordU.x shouldBe 0
-    coordU.y shouldBe -9
-
-    val coordD = ManhattanDistance.Coordinate.calcNextCoord("D9", origin)
-    println(s"coordD(${coordD.x}, ${coordD.y})")
-    coordD.x shouldBe 0
-    coordD.y shouldBe 9
-
-    val bogey = ManhattanDistance.Coordinate.calcNextCoord("Z9", origin)
-    println(s"bogey(${bogey.x}, ${bogey.y})")
-    bogey.x shouldBe 0
-    bogey.y shouldBe 0
+//    vec.last shouldBe finalCoord
+//    vec.size shouldBe 25
   }
 
-  behavior of "extendPath"
+  behavior of "getListOfMoves"
 
-  it should "return a new path with just with the new coordinate added to it" in {
-    val coord1 = new ManhattanDistance.Coordinate(3, 4)
-    val vector: Vector[Coordinate] = Vector.empty :+ coord1
-    val oldPath = new ManhattanDistance.Path(vector)
+  it should "return a tuple of both move sets" in {
 
-    val newPath = Path.extendPath("U3", oldPath)
-    println(s"oldPath last coord => ${oldPath.vec.last}")
-    println(s"oldPath size => ${oldPath.vec.size}")
-    println(s"newPath last coord => ${newPath.vec.last}")
-    println(s"newPath size => ${newPath.vec.size}")
+    println(moveSets._1)
+    println(moveSets._2)
   }
 
   behavior of "PathGenerator"
 
-  it should "return a Path populated with all the move coordinate" in {
-    val moves = ManhattanDistance.getData("ManhattanDistanceData").split("\n")
-    println(ManhattanDistance.PathGenerator(moves(0)))
-    println(ManhattanDistance.PathGenerator(moves(1)))
+  it should "return a vector with all of the points of interest" in {
+    println(criticalPath1)
   }
 
-  behavior of "generateCoords"
+  behavior of "generateIntermediateCoords"
 
   it should "return a vector of all the points from current" in {
-    val x = ManhattanDistance.generateIntermediateCoords("X", 5, Coordinate(13, 2))
-    val v = (0 to 5).map(c => new Coordinate(10, c)).toVector
-    println(v)
-    println(x)
+//    val x = ManhattanDistance.generateIntermediateCoords("X", 5, Coordinate(13, 2))
+//    val v = (0 to 5).map(c => Coordinate(10, c)).toVector
+//    println(v)
+//    println(x)
+  }
+
+  it should "return the full path for one of the moves" in {
+//    criticalPath1.vec.map(c => ManhattanDistance.generateIntermediateCoords(c.))
   }
 
 

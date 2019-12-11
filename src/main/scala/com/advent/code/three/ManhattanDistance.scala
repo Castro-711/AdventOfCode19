@@ -2,55 +2,54 @@ package com.advent.code.three
 
 object ManhattanDistance {
 
-  case class Coordinate(x: Int, y: Int) {
+  case class Coordinate(x: Int, y: Int, axis: String) {
     override def toString(): String = s"(${this.x}, ${this.y})"
   }
-  case object Coordinate {
-    def calcNextCoord(move: String, c: Coordinate): Coordinate = {
-      val direction = move.charAt(0)
-      val distance = move.substring(1).toInt
 
-      direction match {
-        case 'R' => new Coordinate(c.x + distance, c.y)
-        case 'L' => new Coordinate(c.x - distance, c.y)
-        case 'U' => new Coordinate(c.x, c.y - distance)
-        case 'D' => new Coordinate(c.x, c.y + distance)
-        case _ => println(s"Bogey direction in the move $c"); c
-      }
-    }
-  }
+  def generateNextCoord(move: String, c: Coordinate): Coordinate = {
+    val direction = move.charAt(0)
+    val distance = move.substring(1).toInt
 
-  case class Path(vec: Vector[Coordinate])
-  case object Path {
-    def extendPath(move: String, p: Path): Path = {
-      val lastCoord = p.vec.last
-      val nextCoord = Coordinate.calcNextCoord(move, lastCoord)
-      new Path(p.vec :+ nextCoord)
-    }
-  }
-
-  object PathGenerator {
-    def apply(moves: String): Path = {
-      val movesArray = moves.split(",").toList
-
-      def createCoordsVector(vec: Vector[Coordinate], l: List[String]): Vector[Coordinate] = {
-        l match {
-          case Nil => vec
-          case h :: t if vec.isEmpty => createCoordsVector(vec :+ Coordinate.calcNextCoord(h, Coordinate(0, 0)), t)
-          case h :: t => createCoordsVector(vec :+ Coordinate.calcNextCoord(h, vec.last), t)
-        }
-      }
-
-      new Path(createCoordsVector(Vector.empty[Coordinate], movesArray))
+    direction match {
+    case 'R' => Coordinate(c.x + distance, c.y, "X")
+    case 'L' => Coordinate(c.x - distance, c.y, "X")
+    case 'U' => Coordinate(c.x, c.y - distance, "Y")
+    case 'D' => Coordinate(c.x, c.y + distance, "Y")
+    case _ => println(s"Bogey direction in the move $c"); c
     }
   }
 
   def generateIntermediateCoords(axis: String, distance: Int, start: Coordinate): Vector[Coordinate] = {
-    val vec = Vector.empty[Coordinate]
     axis match {
-      case "Y" => (start.y to start.y + distance).map(c => new Coordinate(start.x, c)).toVector
-      case "X" => (start.x to start.x + distance).map(c => new Coordinate(c, start.y)).toVector
+      case "Y" => (start.y to start.y + distance).map(c => Coordinate(start.x, c, "Y")).toVector
+      case "X" => (start.x to start.x + distance).map(c => Coordinate(c, start.y, "X")).toVector
       case _ => println("Not a valid axis !!!"); Vector.empty[Coordinate]
+    }
+  }
+
+  def getListOfMoves(): (List[String], List[String]) = {
+    val moveSets = getData("ManhattanDistanceData").split("\\n")
+
+    val movesOne = moveSets(0).split(",").toList
+    val movesTwo = moveSets(1).split(",").toList
+
+    (movesOne, movesTwo)
+  }
+
+  case class Path(vec: Vector[Coordinate])
+  case object Path {}
+
+  object PathGenerator {
+    def apply(moves: List[String]): Path = {
+
+      def createCoordsVector(vec: Vector[Coordinate], l: List[String]): Vector[Coordinate] = {
+        l match {
+          case Nil => vec
+          case h :: t if vec.isEmpty => createCoordsVector(vec :+ generateNextCoord(h, Coordinate(0, 0, h))._1, t)
+          case h :: t => createCoordsVector(vec :+ generateNextCoord(h, vec.last)._1, t)
+        }
+      }
+      new Path(createCoordsVector(Vector.empty[Coordinate], moves))
     }
   }
 
