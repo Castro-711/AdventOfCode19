@@ -23,17 +23,62 @@ class ManhattanDistanceTest extends FlatSpecLike with Matchers {
   behavior of "getCoordsPath"
 
   it should "get the distinct coords" in {
-    println(ManhattanDistance.getCoordsPath(moveSets._1).reverse)
+    println(ManhattanDistance.getCoordsPath(moveSets._1))
     println(ManhattanDistance.getCoordsPath(moveSets._2))
   }
 
-  it should "fill the paths to the critical points" in {
+  it should "be able to find the close coord that intersects the two paths" in {
     val moves1 = "R75,D30,R83,U83,L12,D49,R71,U7,L72".split(",").toList
     val moves2 = "U62,R66,U55,R34,D71,R55,D58,R83".split(",").toList
 
-    println(ManhattanDistance.getCoordsPath(moves1))
-    println(ManhattanDistance.getCoordsPath(moves2))
+    val path1 = ManhattanDistance.getCoordsPath(moves1)
+    val path2 = ManhattanDistance.getCoordsPath(moves2)
 
+    val intersects = path1.intersect(path2)
+    val sorted = intersects.map(c => c._1.abs + c._2.abs).sorted
+
+    println(sorted)
+    sorted(1) shouldBe 159
+  }
+
+  it should "calculate the correct answer for the challenge" in {
+    val path1 = ManhattanDistance.getCoordsPath(moveSets._1)
+    val path2 = ManhattanDistance.getCoordsPath(moveSets._2)
+
+    val intersects = path1.intersect(path2)
+    val sorted = intersects.map(c => c._1.abs + c._2.abs).sorted
+
+    println(sorted)
+  }
+
+  behavior of "Part 2"
+
+  it should "be able to find the coord with the shortest distance and the coord" in {
+    val moves1 = "R75,D30,R83,U83,L12,D49,R71,U7,L72".split(",").toList
+    val moves2 = "U62,R66,U55,R34,D71,R55,D58,R83".split(",").toList
+
+    val path1 = ManhattanDistance.getCoordsPath(moves1)
+    val path2 = ManhattanDistance.getCoordsPath(moves2)
+
+    println(path1)
+    println(path2)
+
+    val intersects = path1.intersect(path2)
+    println(intersects.map(c => (c._1.abs + c._2.abs, (c._1, c._2))))
+
+    def countSteps(l: List[(Int, Int)], count: Int): Int = {
+      l match {
+        case h :: t if h == (155, 4) => count
+        case h :: t => countSteps(t, count + 1)
+        case Nil => count
+      }
+    }
+
+    val steps1 = countSteps(path1, 0)
+    val steps2 = countSteps(path2, 0)
+    println(steps1)
+    println(steps2)
+    println(steps1 + steps2)
   }
 
 }
